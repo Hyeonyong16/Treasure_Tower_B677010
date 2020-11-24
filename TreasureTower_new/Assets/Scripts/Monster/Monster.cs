@@ -12,8 +12,11 @@ public class Monster : MonoBehaviour
     public Transform player;
     public Vector3 lastPlayerPos;
 
+    public Vector3 MonsterSpawnPos;
+
     public bool isEnteredPlayer;
     public bool isChasePlayer;
+    public bool isDelayIdle;
 
     public float AttackRange;
     public float dist;          //플레이어와 몬스터 거리
@@ -30,8 +33,14 @@ public class Monster : MonoBehaviour
     {
         player = GameObject.Find("Player").transform;
 
+        isDelayIdle = false;
+        isEnteredPlayer = false;
+        isChasePlayer = false;
+
         animator = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
+
+        MonsterSpawnPos = GameObject.Find("MonsterSpawn").transform.position;
     }
 
     // Update is called once per frame
@@ -50,10 +59,12 @@ public class Monster : MonoBehaviour
             var distance = heading.magnitude;
             var direction = heading / distance;
 
-            if (Physics.Raycast(transform.position, direction, out hit))
+            int layerMask = (-1) - (1 << LayerMask.NameToLayer("Enemy"));
+
+            if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerMask))
             {
-                //Debug.DrawRay(transform.position, direction * hit.distance, Color.yellow);
-                //Debug.Log(hit.transform.name);
+                Debug.DrawRay(transform.position, direction * hit.distance, Color.yellow);
+                Debug.Log(hit.transform.name);
 
                 if (hit.transform.name == "Player")
                 {
@@ -99,4 +110,34 @@ public class Monster : MonoBehaviour
         }
     }
 
+    //========================================
+    public void CheckIdleTime()
+    {
+        if (!(((transform.position.x <= MonsterSpawnPos.x + 1.0f) && (transform.position.x >= MonsterSpawnPos.x - 1.0f))
+                    && ((transform.position.z <= MonsterSpawnPos.z + 1.0f) && (transform.position.z >= MonsterSpawnPos.z - 1.0f))))
+        {
+            StartCoroutine("delayCheck");
+        }
+    }
+
+    IEnumerator delayCheck()
+    {
+        yield return new WaitForSeconds(5.0f);
+        if (currentState.ToString() == "MonsterIdleState")
+        {
+            Debug.Log("실행");
+            isDelayIdle = true;
+        }
+    }
+}
+
+//Extension method 
+//static이 붙어야 함
+//파라미터를 this로 받아야함.
+public static class vector3Extension
+{
+    public static Vector3 ignoreY(this Vector3 param)
+    {
+        return new Vector3(param.x, 0, param.z);
+    }
 }

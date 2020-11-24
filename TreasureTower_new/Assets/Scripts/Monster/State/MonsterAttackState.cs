@@ -26,6 +26,16 @@ public class MonsterAttackState : IState
 
     public void Update()
     {
+        //var heading = parent.player.position - parent.transform.position;
+        //var direction = heading.normalized;
+
+        //parent.transform.rotation = Quaternion.Lerp(parent.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 3.0f);
+
+        var heading = parent.player.position.ignoreY() - parent.transform.position.ignoreY();
+        var direction = heading.normalized;
+
+        parent.transform.rotation = Quaternion.Lerp(parent.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 3.0f);
+
         if (parent.dist > 2.5f)
         {
             if (parent.isChasePlayer)
@@ -46,6 +56,11 @@ public class MonsterAttackState : IState
                     parent.ChangeState(new MonsterIdleState());
                 }
             }
+        }
+
+        else
+        {
+            
         }
     }
 }

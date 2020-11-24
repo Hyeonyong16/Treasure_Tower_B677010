@@ -16,6 +16,11 @@ public class MonsterIdleState : IState
 
         animator.SetBool("IsAttacking", false);
         animator.SetBool("ChasePlayer", false);
+        animator.SetBool("isWalking", false);
+        
+        //parent.nav.isStopped = true;
+
+        parent.isDelayIdle = false;
     }
 
     public void Exit()
@@ -25,9 +30,23 @@ public class MonsterIdleState : IState
 
     public void Update()
     {
+        parent.CheckIdleTime();
+
+        if (parent.isDelayIdle)
+        {
+            if (!(((parent.transform.position.x <= parent.MonsterSpawnPos.x + 1.0f) && (parent.transform.position.x >= parent.MonsterSpawnPos.x - 1.0f))
+                        && ((parent.transform.position.z <= parent.MonsterSpawnPos.z + 1.0f) && (parent.transform.position.z >= parent.MonsterSpawnPos.z - 1.0f))))
+            {
+                parent.isDelayIdle = false;
+                parent.ChangeState(new MonsterWalkState());
+            }
+        }
+
         if(parent.isChasePlayer)
         {
+            parent.isDelayIdle = false;
             parent.ChangeState(new MonsterRunState());
         }
     }
+
 }

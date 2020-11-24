@@ -13,6 +13,7 @@ public class MonsterRunState : IState
         Debug.Log("RunState");
         this.parent = parent;
         animator = parent.GetComponent<Animator>();
+
         parent.nav.isStopped = false;
     }
 
