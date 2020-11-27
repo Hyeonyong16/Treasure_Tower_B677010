@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 3.0f;          //이동속도
+    public float speed = 4.5f;          //이동속도
+    public float crouchSpeed = 2.0f;    //앉은속도
     public float rotateSpeed = 5.0f;    //회전속도
-    public float jumpPower = 5.0f;      //점프정도
+    //public float jumpPower = 5.0f;      //점프정도
 
     //public GameObject miniMap;
 
+    public Player player;
+
     private Rigidbody characterRigidbody;   //캐릭터 Rigidbody
     private Transform characterTransform;   //캐릭터 Transform
+
+    private Animator animator;
 
     private MainCamera mainCamera;
 
@@ -22,8 +27,13 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
+        player = GetComponent<Player>();
+
         characterRigidbody = GetComponent<Rigidbody>();
         characterTransform = GetComponent<Transform>();
+
+        animator = GetComponent<Animator>();
+
         mainCamera = GameObject.Find("Main Camera").GetComponent<MainCamera>();
     }
 
@@ -38,18 +48,61 @@ public class PlayerMove : MonoBehaviour
     {
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
+        
     }
 
     private void FixedUpdate()
     {
-        Move();
-        Turn();
+        if (!player.isThrow)
+        {
+            Move();
+            Turn();
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            player.isCrouch = !player.isCrouch;
+            animator.SetBool("isCrouch", player.isCrouch);
+        }
+        
     }
 
     //=========================================
     //이동관련 함수
     void Move()
     {
+        //애니메이션 체크용 플레이어 움직임 확인
+        if(h > 0.0f)
+        {
+            player.isMove = true;
+            animator.SetBool("isMove", true);
+        }
+
+        else if(h < 0.0f)
+        {
+            player.isMove = true;
+            animator.SetBool("isMove", true);
+        }
+
+        else if(v > 0.0f)
+        {
+            player.isMove = true;
+            animator.SetBool("isMove", true);
+        }
+
+        else if (v < 0.0f)
+        {
+            player.isMove = true;
+            animator.SetBool("isMove", true);
+        }
+
+        else
+        {
+            player.isMove = false;
+            animator.SetBool("isMove", false);
+        }
+
+        //실제 플레이어 이동
         if (mainCamera.cameraLook == 0)
         {
             movement.Set(h, 0, v);
@@ -67,7 +120,11 @@ public class PlayerMove : MonoBehaviour
             movement.Set(-v, 0, h);
         }
 
-        movement = movement.normalized * speed * Time.deltaTime;
+        if(!player.isCrouch)
+            movement = movement.normalized * speed * Time.deltaTime;
+
+        else
+            movement = movement.normalized * crouchSpeed * Time.deltaTime;
 
         characterRigidbody.MovePosition(transform.position + movement);
     }

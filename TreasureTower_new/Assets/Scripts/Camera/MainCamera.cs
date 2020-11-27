@@ -24,6 +24,8 @@ public class MainCamera : MonoBehaviour
 
         transform.position = cameraPosition;
 
+        player = GameObject.Find("Player");
+
         cameraRotation = 0;
         cameraLook = 0;
     }
