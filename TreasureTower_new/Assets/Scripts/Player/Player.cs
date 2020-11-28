@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public bool isMove = false;
     public bool isCrouch = false;
     public bool isThrow = false;
+    public bool isInteraction = false;
 
     // Start is called before the first frame update
     void Start()

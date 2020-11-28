@@ -25,7 +25,7 @@ public class PlayerThrowObject : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            if (player.isThrow == false)
+            if (!player.isThrow && !player.isInteraction)
             {
                 player.isThrow = true;
                 animator.SetBool("isThrow", player.isThrow);

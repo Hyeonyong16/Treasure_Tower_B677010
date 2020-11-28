@@ -53,7 +53,7 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!player.isThrow)
+        if (!player.isThrow && !player.isInteraction)
         {
             Move();
             Turn();
