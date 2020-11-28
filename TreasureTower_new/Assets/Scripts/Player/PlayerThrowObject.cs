@@ -48,6 +48,6 @@ public class PlayerThrowObject : MonoBehaviour
         Debug.Log(transform.forward);
         GameObject instance = Instantiate(coin, shotPos.position, transform.rotation) as GameObject;
 
-        coin.GetComponent<Rigidbody>().AddForce(angle * throwPower, ForceMode.Impulse);
+        instance.GetComponent<Rigidbody>().AddForce(angle * throwPower, ForceMode.Impulse);
     }
 }

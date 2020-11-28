@@ -20,21 +20,39 @@ public class MonsterWalkState : IState
 
     public void Exit()
     {
-
+        animator.SetBool("isWalking", false);
+        parent.isEnteredCoin = false;
     }
 
     public void Update()
     {
         if (!parent.isChasePlayer)
         {
-            parent.nav.SetDestination(parent.MonsterSpawnPos);
-
-            if (((parent.transform.position.x <= parent.MonsterSpawnPos.x + 1.0f) && (parent.transform.position.x >= parent.MonsterSpawnPos.x - 1.0f))
-                        && ((parent.transform.position.z <= parent.MonsterSpawnPos.z + 1.0f) && (parent.transform.position.z >= parent.MonsterSpawnPos.z - 1.0f)))
+            if (parent.isEnteredCoin)
             {
-                animator.SetBool("isWalking", false);
-                parent.nav.isStopped = true;
-                parent.ChangeState(new MonsterIdleState());
+                parent.nav.SetDestination(parent.CoinPos);
+
+                if (((parent.transform.position.x <= parent.CoinPos.x + 1.0f) && (parent.transform.position.x >= parent.CoinPos.x - 1.0f))
+                            && ((parent.transform.position.z <= parent.CoinPos.z + 1.0f) && (parent.transform.position.z >= parent.CoinPos.z - 1.0f)))
+                {
+                    animator.SetBool("isWalking", false);
+                    parent.nav.isStopped = true;
+                    parent.isEnteredCoin = false;
+                    parent.ChangeState(new MonsterIdleState());
+                }
+            }
+
+            else
+            {
+                parent.nav.SetDestination(parent.MonsterSpawnPos);
+
+                if (((parent.transform.position.x <= parent.MonsterSpawnPos.x + 1.0f) && (parent.transform.position.x >= parent.MonsterSpawnPos.x - 1.0f))
+                            && ((parent.transform.position.z <= parent.MonsterSpawnPos.z + 1.0f) && (parent.transform.position.z >= parent.MonsterSpawnPos.z - 1.0f)))
+                {
+                    animator.SetBool("isWalking", false);
+                    parent.nav.isStopped = true;
+                    parent.ChangeState(new MonsterIdleState());
+                }
             }
         }
 

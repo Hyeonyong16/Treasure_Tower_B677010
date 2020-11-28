@@ -16,6 +16,8 @@ public class MainCamera : MonoBehaviour
     Vector3 cameraPosition;     //변환된 카메라 포지션을 저장해둘 변수
     float cameraRotation;
 
+    Renderer objectRenderer;
+
     private void Start()
     {
         cameraPosition.x = player.transform.position.x + offsetX;
@@ -32,68 +34,15 @@ public class MainCamera : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    cameraRotation += 90.0f;
-        //    Quaternion rotation = Quaternion.Euler(45, cameraRotation, 0);
-
-        //    map.transform.rotation = Quaternion.Euler(90, cameraRotation, 0);
-
-        //    transform.rotation = rotation;
-
-        //    cameraLook += 1;
-        //    if (cameraLook == 4) cameraLook = 0;
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.E))
-        //{
-        //    cameraRotation -= 90.0f;
-        //    Quaternion rotation = Quaternion.Euler(45, cameraRotation, 0);
-
-        //    map.transform.rotation = Quaternion.Euler(90, cameraRotation, 0);
-
-        //    transform.rotation = rotation;
-
-        //    cameraLook -= 1;
-        //    if (cameraLook == -1) cameraLook = 3;
-        //}
-    }
-
-    private void LateUpdate()
-    {
-        //if (cameraLook == 0)
-        //{
-        //    offsetX = 0;
-        //    offsetY = 5;
-        //    offsetZ = -5;
-        //}
-
-        //else if (cameraLook == 1)
-        //{
-        //    offsetX = -5;
-        //    offsetY = 5;
-        //    offsetZ = 0;
-        //}
-
-        //else if (cameraLook == 2)
-        //{
-        //    offsetX = 0;
-        //    offsetY = 5;
-        //    offsetZ = 5;
-        //}
-
-        //else
-        //{
-        //    offsetX = 5;
-        //    offsetY = 5;
-        //    offsetZ = 0;
-        //}
-
         cameraPosition.x = player.transform.position.x + offsetX;
         cameraPosition.y = player.transform.position.y + offsetY;
         cameraPosition.z = player.transform.position.z + offsetZ;
 
         transform.position = cameraPosition;
         transform.LookAt(player.transform);
+    }
+
+    private void LateUpdate()
+    {
     }
 }

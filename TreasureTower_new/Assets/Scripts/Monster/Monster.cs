@@ -11,11 +11,13 @@ public class Monster : MonoBehaviour
 
     public Transform player;
     public Vector3 lastPlayerPos;
+    public Vector3 CoinPos;
 
     public Vector3 MonsterSpawnPos;
 
     public bool isEnteredPlayer;
     public bool isChasePlayer;
+    public bool isEnteredCoin;
     public bool isDelayIdle;
 
     public float AttackRange;
@@ -64,12 +66,12 @@ public class Monster : MonoBehaviour
             if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerMask))
             {
                 Debug.DrawRay(transform.position, direction * hit.distance, Color.yellow);
-                Debug.Log(hit.transform.name);
+                //Debug.Log(hit.transform.name);
 
                 if (hit.transform.name == "Player")
                 {
                     isChasePlayer = true;
-                    if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Attack"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Attack"))
                         lastPlayerPos = player.position;
                 }
 
@@ -84,7 +86,7 @@ public class Monster : MonoBehaviour
     //========================================
     public void ChangeState(IState newState)
     {
-        if(currentState != null)
+        if (currentState != null)
         {
             currentState.Exit();
         }
@@ -94,11 +96,28 @@ public class Monster : MonoBehaviour
     }
 
     //========================================
+    private void OnTriggerEnter(Collider other)
+    {
+
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player")
         {
             isEnteredPlayer = true;
+        }
+
+        if (other.tag == "Coin")
+        {
+            Coin coin = other.GetComponent<Coin>();
+
+            if (coin.isGround && !coin.isChecked)
+            {
+                coin.isChecked = true;
+                isEnteredCoin = true;
+                CoinPos = other.gameObject.transform.position;
+            }
         }
     }
 

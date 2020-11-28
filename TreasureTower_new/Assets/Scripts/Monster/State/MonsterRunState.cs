@@ -19,7 +19,7 @@ public class MonsterRunState : IState
 
     public void Exit()
     {
-
+        parent.isEnteredCoin = false;
     }
 
     public void Update()

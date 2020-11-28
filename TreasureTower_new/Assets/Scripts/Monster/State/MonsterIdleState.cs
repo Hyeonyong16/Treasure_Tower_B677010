@@ -47,6 +47,14 @@ public class MonsterIdleState : IState
             parent.isDelayIdle = false;
             parent.ChangeState(new MonsterRunState());
         }
+
+        else
+        {
+            if(parent.isEnteredCoin)
+            {
+                parent.ChangeState(new MonsterWalkState());
+            }
+        }
     }
 
 }
