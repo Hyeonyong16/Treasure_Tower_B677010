@@ -22,8 +22,8 @@ public class ObjectInteraction : MonoBehaviour
         isPlayerEnter = false;
         progress = 0;
 
-        progressBarUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
-            Find("BackGround_Progress").transform.Find("Progress").GetComponent<ProgressBar>();
+        //progressBarUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
+        //   Find("BackGround_Progress").transform.Find("Progress").GetComponent<ProgressBar>();
     }
 
     // Update is called once per frame

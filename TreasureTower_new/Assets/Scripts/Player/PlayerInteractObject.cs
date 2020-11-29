@@ -38,9 +38,14 @@ public class PlayerInteractObject : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (!player.isThrow && nearObject != null)
+            if (!player.isThrow && nearObject != null && !player.isInteraction)
             {
-                if (!player.isInteraction)
+                if(nearObject.name == "Coin" && player.coinNum == player.MaxCoinNum)
+                {
+
+                }
+
+                else
                 {
                     player.moveFreezeCheck = true;
 
@@ -52,6 +57,7 @@ public class PlayerInteractObject : MonoBehaviour
 
                     nearObject.GetComponent<ObjectInteraction>().progressBarUI.transform.parent.gameObject.SetActive(true);
                 }
+
 
                 //else
                 //{
@@ -69,6 +75,11 @@ public class PlayerInteractObject : MonoBehaviour
 
         if (nearObject.GetComponent<ObjectInteraction>().maxProgress == nearObject.GetComponent<ObjectInteraction>().progress)
         {
+            if(nearObject.name == "Coin")
+            {
+                player.coinNum++;
+            }
+
             Destroy(nearObject);
         }
     }
