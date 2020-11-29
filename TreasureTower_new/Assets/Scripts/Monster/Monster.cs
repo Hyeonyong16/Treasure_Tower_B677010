@@ -9,6 +9,8 @@ public class Monster : MonoBehaviour
 
     public NavMeshAgent nav;
 
+    public GameObject weapon;
+
     public Transform player;
     public Vector3 lastPlayerPos;
     public Vector3 CoinPos;
@@ -95,6 +97,11 @@ public class Monster : MonoBehaviour
         currentState.Enter(this);
     }
 
+    public IState GetCurrentState()
+    {
+        return currentState;
+    }
+
     //========================================
     private void OnTriggerEnter(Collider other)
     {
@@ -130,6 +137,11 @@ public class Monster : MonoBehaviour
     }
 
     //========================================
+    public void SetisPlayerEnteredFalse()
+    {
+        weapon.GetComponent<MonsterWeapon>().SetisPlayerEnteredFalse();
+    }
+
     public void CheckIdleTime()
     {
         if (!(((transform.position.x <= MonsterSpawnPos.x + 1.0f) && (transform.position.x >= MonsterSpawnPos.x - 1.0f))

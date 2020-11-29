@@ -6,9 +6,12 @@ public class ObjectInteraction : MonoBehaviour
 {
     public bool isPlayerEnter;
     public Player player;
+    public GameObject interactedObject;
+
+    public ProgressBar progressBarUI;
+
 
     public int progress = 0;
-
     public int maxProgress;
 
     private bool checkCoroutine = false;
@@ -18,6 +21,9 @@ public class ObjectInteraction : MonoBehaviour
     {
         isPlayerEnter = false;
         progress = 0;
+
+        progressBarUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
+            Find("BackGround_Progress").transform.Find("Progress").GetComponent<ProgressBar>();
     }
 
     // Update is called once per frame
@@ -37,10 +43,17 @@ public class ObjectInteraction : MonoBehaviour
                 {
                     player.GetComponent<Animator>().SetBool("isInteraction", false);
 
+                    //interactedObject.GetComponent</*상호작용 들어갈 스크립트*/>().interact();
                     //======================
-                    Destroy(this.gameObject);
+                    //progressBarUI.transform.parent.gameObject.SetActive(false);
+                    //Destroy(interactedObject);
                     //======================
                 }
+            }
+
+            else if (maxProgress > progress)
+            {
+                if (!player.isInteraction) progress = 0;
             }
         }
     }
@@ -67,9 +80,14 @@ public class ObjectInteraction : MonoBehaviour
 
     IEnumerator interact()
     {
+        progressBarUI.progress = progress;
+
         checkCoroutine = true;
         yield return new WaitForSeconds(2.0f);
+
         progress++;
+        progressBarUI.progress = progress;
+
         checkCoroutine = false;
     }
 }

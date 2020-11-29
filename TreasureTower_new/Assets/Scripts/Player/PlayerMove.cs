@@ -53,10 +53,11 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!player.isThrow && !player.isInteraction)
+        if (!player.isThrow && !player.moveFreezeCheck)
         {
             Move();
-            Turn();
+            if(!player.isInteraction)
+                Turn();
         }
 
         if(Input.GetKeyDown(KeyCode.LeftShift))
@@ -102,6 +103,7 @@ public class PlayerMove : MonoBehaviour
             animator.SetBool("isMove", false);
         }
 
+        
         //실제 플레이어 이동
         if (mainCamera.cameraLook == 0)
         {
@@ -120,13 +122,21 @@ public class PlayerMove : MonoBehaviour
             movement.Set(-v, 0, h);
         }
 
-        if(!player.isCrouch)
-            movement = movement.normalized * speed * Time.deltaTime;
+        if (player.isInteraction && player.isMove)
+        {
+            player.GetComponent<Animator>().SetBool("isInteraction", false);
+        }
 
-        else
-            movement = movement.normalized * crouchSpeed * Time.deltaTime;
+        else if (!player.isInteraction && player.isMove)
+        {
+            if (!player.isCrouch)
+                movement = movement.normalized * speed * Time.deltaTime;
 
-        characterRigidbody.MovePosition(transform.position + movement);
+            else
+                movement = movement.normalized * crouchSpeed * Time.deltaTime;
+
+            characterRigidbody.MovePosition(transform.position + movement);
+        }
     }
 
     void Turn()

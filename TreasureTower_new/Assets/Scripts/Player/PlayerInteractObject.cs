@@ -9,11 +9,16 @@ public class PlayerInteractObject : MonoBehaviour
 
     public GameObject nearObject;
 
+    public GameObject interactionUI;
+
     // Start is called before the first frame update
     void Start()
     {
         player = GetComponent<Player>();
         animator = GetComponent<Animator>();
+
+        interactionUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
+            Find("BackGround_InteractionCheck").gameObject;
 
         nearObject = null;
     }
@@ -21,14 +26,31 @@ public class PlayerInteractObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(nearObject != null && !player.isInteraction)
+        {
+            interactionUI.SetActive(true);
+        }
+
+        else
+        {
+            interactionUI.SetActive(false);
+        }
+
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (!player.isThrow && nearObject != null)
             {
                 if (!player.isInteraction)
                 {
+                    player.moveFreezeCheck = true;
+
+                    player.isMove = false;
                     player.isInteraction = true;
+
                     animator.SetBool("isInteraction", true);
+                    //animator.SetBool("isMove", false);
+
+                    nearObject.GetComponent<ObjectInteraction>().progressBarUI.transform.parent.gameObject.SetActive(true);
                 }
 
                 //else
@@ -42,5 +64,17 @@ public class PlayerInteractObject : MonoBehaviour
     public void SetInteractionFalse()
     {
         player.isInteraction = false;
+        nearObject.GetComponent<ObjectInteraction>().progressBarUI.initProgress();
+        nearObject.GetComponent<ObjectInteraction>().progressBarUI.transform.parent.gameObject.SetActive(false);
+
+        if (nearObject.GetComponent<ObjectInteraction>().maxProgress == nearObject.GetComponent<ObjectInteraction>().progress)
+        {
+            Destroy(nearObject);
+        }
+    }
+
+    public void SetMoveFreezeFalse()
+    {
+        player.moveFreezeCheck = false;
     }
 }

@@ -25,9 +25,10 @@ public class PlayerThrowObject : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            if (!player.isThrow && !player.isInteraction)
+            if (!player.isThrow && !player.isInteraction && player.coinNum > 0)
             {
                 player.isThrow = true;
+                player.coinNum--;
                 animator.SetBool("isThrow", player.isThrow);
             }
         }
