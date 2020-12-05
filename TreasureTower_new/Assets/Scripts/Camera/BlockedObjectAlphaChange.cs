@@ -31,7 +31,7 @@ public class BlockedObjectAlphaChange : MonoBehaviour
         {
             Debug.DrawRay(mainCamera.transform.position, direction * hit.distance, Color.red);
             //Debug.Log("Distance: " + distance);
-            Debug.Log(hit.transform.name);
+            //Debug.Log(hit.transform.name);
 
             if (hit.transform.tag == "Object")
             {
@@ -39,7 +39,7 @@ public class BlockedObjectAlphaChange : MonoBehaviour
                 {
                     if (objectRenderer != null)
                     {
-                        Debug.Log("알파값 복구");
+                        //Debug.Log("알파값 복구");
                         Material mat = objectRenderer.material;
                         Color matColor = mat.color;
                         matColor.a = 1.0f;
@@ -64,7 +64,7 @@ public class BlockedObjectAlphaChange : MonoBehaviour
             {
                 if (objectRenderer != null)
                 {
-                    Debug.Log("알파값 복구");
+                    //Debug.Log("알파값 복구");
                     Material mat = objectRenderer.material;
                     Color matColor = mat.color;
                     matColor.a = 1.0f;

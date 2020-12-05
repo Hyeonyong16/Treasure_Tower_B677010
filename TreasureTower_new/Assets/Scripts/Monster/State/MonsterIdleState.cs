@@ -8,6 +8,8 @@ public class MonsterIdleState : IState
 
     private Animator animator;
 
+    private float turnSpeed = 5.0f;
+
     public void Enter(Monster parent)
     {
         Debug.Log("IdleState");
@@ -21,30 +23,42 @@ public class MonsterIdleState : IState
         //parent.nav.isStopped = true;
 
         parent.isDelayIdle = false;
+        parent.idleCheck = false;
+
+        if(!parent.isAnotherSpot)
+        {
+            parent.fieldOfView.viewAngle = 65;
+            parent.fieldOfView.viewRadius = 10;
+        }
     }
 
     public void Exit()
     {
-        
+        parent.isDelayIdle = false;
     }
 
     public void Update()
     {
         parent.CheckIdleTime();
 
+        if(!parent.isAnotherSpot)
+        {
+            parent.gameObject.transform.rotation = Quaternion.Slerp(parent.gameObject.transform.rotation, parent.monsterFirstRot, turnSpeed * Time.deltaTime);
+        }
+
         if (parent.isDelayIdle)
         {
-            if (!(((parent.transform.position.x <= parent.MonsterSpawnPos.x + 1.0f) && (parent.transform.position.x >= parent.MonsterSpawnPos.x - 1.0f))
-                        && ((parent.transform.position.z <= parent.MonsterSpawnPos.z + 1.0f) && (parent.transform.position.z >= parent.MonsterSpawnPos.z - 1.0f))))
+            if (!(Vector3.Distance(parent.transform.position.ignoreY(), parent.MonsterSpawnPos.ignoreY()) <= Mathf.Sqrt(1.0f)))
             {
-                parent.isDelayIdle = false;
+                Debug.Log("문제임;?");
+                parent.isAnotherSpot = false;
                 parent.ChangeState(new MonsterWalkState());
             }
         }
 
-        if(parent.isChasePlayer)
+        if(parent.isWatchingPlayer)
         {
-            parent.isDelayIdle = false;
+            parent.isAnotherSpot = true;
             parent.ChangeState(new MonsterRunState());
         }
 
@@ -52,6 +66,7 @@ public class MonsterIdleState : IState
         {
             if(parent.isEnteredCoin)
             {
+                parent.isAnotherSpot = true;
                 parent.ChangeState(new MonsterWalkState());
             }
         }

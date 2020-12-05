@@ -15,6 +15,13 @@ public class MonsterRunState : IState
         animator = parent.GetComponent<Animator>();
 
         parent.nav.isStopped = false;
+
+        parent.isChasePlayer = true;
+        
+        animator.SetBool("ChasePlayer", true);
+
+        parent.fieldOfView.viewAngle = 360;
+        parent.fieldOfView.viewRadius = 14.5f;
     }
 
     public void Exit()
@@ -24,9 +31,8 @@ public class MonsterRunState : IState
 
     public void Update()
     {
-        if (parent.isChasePlayer)
+        if (parent.isWatchingPlayer)
         {
-            animator.SetBool("ChasePlayer", true);
             parent.nav.SetDestination(parent.lastPlayerPos);
             
             if(parent.dist <= 2.5f)
@@ -39,8 +45,7 @@ public class MonsterRunState : IState
         {
             if (animator.GetBool("ChasePlayer"))
             {
-                if (((parent.transform.position.x <= parent.lastPlayerPos.x + 0.5f) && (parent.transform.position.x >= parent.lastPlayerPos.x - 0.5f))
-                    && ((parent.transform.position.z <= parent.lastPlayerPos.z + 0.5f) && (parent.transform.position.z >= parent.lastPlayerPos.z - 0.5f)))
+                if ((Vector3.Distance(parent.transform.position.ignoreY(), parent.lastPlayerPos.ignoreY()) <= Mathf.Sqrt(0.5f)))
                 {
                     Debug.Log("도착");
                     animator.SetBool("ChasePlayer", false);
@@ -51,6 +56,7 @@ public class MonsterRunState : IState
             {
                 animator.SetBool("ChasePlayer", false);
                 parent.nav.isStopped = true;
+                parent.isChasePlayer = false;
                 parent.ChangeState(new MonsterIdleState());
             }
         }

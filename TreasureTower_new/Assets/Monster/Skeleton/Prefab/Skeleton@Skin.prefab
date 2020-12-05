@@ -1138,7 +1138,6 @@ GameObject:
   - component: {fileID: 3964432146731896350}
   - component: {fileID: 3964432146731896351}
   - component: {fileID: 3964432145292295673}
-  - component: {fileID: 3964432146731896344}
   m_Layer: 0
   m_Name: Skeleton@Skin
   m_TagString: Untagged
@@ -1273,27 +1272,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nav: {fileID: 0}
+  weapon: {fileID: 0}
   player: {fileID: 0}
   lastPlayerPos: {x: 0, y: 0, z: 0}
+  CoinPos: {x: 0, y: 0, z: 0}
+  MonsterSpawnPos: {x: 0, y: 0, z: 0}
   isEnteredPlayer: 0
   isChasePlayer: 0
+  isEnteredCoin: 0
+  isDelayIdle: 0
   AttackRange: 0
   dist: 0
---- !u!114 &3964432146731896344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3964432145292295672}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fe62a1106bb85c49b0ab37aa895753b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isEnteredPlayer: 0
-  isChasePlayer: 0
-  monster: {fileID: 0}
 --- !u!1 &3964432145292295674
 GameObject:
   m_ObjectHideFlags: 0

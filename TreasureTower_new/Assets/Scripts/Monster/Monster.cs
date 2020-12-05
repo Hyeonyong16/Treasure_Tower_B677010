@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class Monster : MonoBehaviour
 {
     private IState currentState;
+    public FieldOfView fieldOfView;
 
     public NavMeshAgent nav;
 
@@ -15,12 +16,19 @@ public class Monster : MonoBehaviour
     public Vector3 lastPlayerPos;
     public Vector3 CoinPos;
 
+    public Transform monsterSpawn;
     public Vector3 MonsterSpawnPos;
+    public Quaternion monsterFirstRot;     //몬스터가 처음지점에서 바라볼 각도
 
-    public bool isEnteredPlayer;
+
+    //public bool isEnteredPlayer;
+    public bool isWatchingPlayer;   //idle, walk일때 플레이어가 몬스터의 시야각에 있는지 체크하는 bool값
     public bool isChasePlayer;
     public bool isEnteredCoin;
-    public bool isDelayIdle;
+    public bool isAnotherSpot;      //기본 위치가 아닌 다른위치인지 확인
+
+    public bool idleCheck = false;  //delayCheck한번만 하기위한 bool값
+    public bool isDelayIdle;        //초기 몬스터 위치 외에서 idle 상태일때 5초가 지났는지 체크하는 bool값
 
     public float AttackRange;
     public float dist;          //플레이어와 몬스터 거리
@@ -38,13 +46,18 @@ public class Monster : MonoBehaviour
         player = GameObject.Find("Player").transform;
 
         isDelayIdle = false;
-        isEnteredPlayer = false;
+        //isEnteredPlayer = false;
         isChasePlayer = false;
+        isAnotherSpot = false;
 
+        //fieldOfView = GetComponent<FieldOfView>();
         animator = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
 
-        MonsterSpawnPos = GameObject.Find("MonsterSpawn").transform.position;
+        MonsterSpawnPos = monsterSpawn.position;
+        transform.position = MonsterSpawnPos.ignoreY();
+
+        monsterFirstRot = transform.rotation;
     }
 
     // Update is called once per frame
@@ -53,8 +66,8 @@ public class Monster : MonoBehaviour
         var playerPos = new Vector3(player.transform.position.x, 0, player.transform.position.z);
         var monsterPos = new Vector3(transform.position.x, 0, transform.position.z);
         dist = Vector3.Distance(playerPos, monsterPos);
-
-        if (isEnteredPlayer)
+        
+        /*if (isEnteredPlayer)
         {
             RaycastHit hit;
 
@@ -67,12 +80,12 @@ public class Monster : MonoBehaviour
 
             if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity, layerMask))
             {
-                Debug.DrawRay(transform.position, direction * hit.distance, Color.yellow);
+                //Debug.DrawRay(transform.position, direction * hit.distance, Color.yellow);
                 //Debug.Log(hit.transform.name);
 
                 if (hit.transform.name == "Player")
                 {
-                    isChasePlayer = true;
+                    isChasePlayer = true; base 
                     if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Attack"))
                         lastPlayerPos = player.position;
                 }
@@ -80,7 +93,24 @@ public class Monster : MonoBehaviour
                 else { isChasePlayer = false; }
             }
         }
-        else { isChasePlayer = false; }
+        else { isChasePlayer = false; }*/
+        
+
+        if (fieldOfView.GetVisibleTargets() == null)
+        {
+            isWatchingPlayer = false;
+        }
+
+        else
+        {
+            if (fieldOfView.GetVisibleTargets().name == player.name)
+            {
+                isWatchingPlayer = true;
+
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Attack"))
+                    lastPlayerPos = player.position;
+            }
+        }
 
         currentState.Update();
     }
@@ -110,10 +140,10 @@ public class Monster : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Player")
-        {
-            isEnteredPlayer = true;
-        }
+        //if (other.tag == "Player")
+        //{
+        //    isEnteredPlayer = true;
+        //}
 
         if (other.tag == "Coin")
         {
@@ -130,10 +160,11 @@ public class Monster : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
-        {
-            isEnteredPlayer = false;
-        }
+        //if (other.tag == "Player")
+        //{
+        //    Debug.Log("꺼짐");
+        //    isEnteredPlayer = false;
+        //}
     }
 
     //========================================
@@ -144,10 +175,15 @@ public class Monster : MonoBehaviour
 
     public void CheckIdleTime()
     {
-        if (!(((transform.position.x <= MonsterSpawnPos.x + 1.0f) && (transform.position.x >= MonsterSpawnPos.x - 1.0f))
-                    && ((transform.position.z <= MonsterSpawnPos.z + 1.0f) && (transform.position.z >= MonsterSpawnPos.z - 1.0f))))
+        //if (!(((transform.position.x <= MonsterSpawnPos.x + 1.0f) && (transform.position.x >= MonsterSpawnPos.x - 1.0f))
+        //            && ((transform.position.z <= MonsterSpawnPos.z + 1.0f) && (transform.position.z >= MonsterSpawnPos.z - 1.0f))))
+        if (!(Vector3.Distance(transform.position.ignoreY(), MonsterSpawnPos.ignoreY()) <= 1))
         {
-            StartCoroutine("delayCheck");
+            if (!idleCheck)
+            {
+                StartCoroutine("delayCheck");
+                idleCheck = true;
+            }
         }
     }
 
