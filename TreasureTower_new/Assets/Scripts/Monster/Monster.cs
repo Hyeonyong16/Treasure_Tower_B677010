@@ -15,17 +15,20 @@ public class Monster : MonoBehaviour
     public Transform player;
     public Vector3 lastPlayerPos;
     public Vector3 CoinPos;
+    public Vector3 SoundPos;
 
     public Transform monsterSpawn;
     public Vector3 MonsterSpawnPos;
     public Quaternion monsterFirstRot;     //몬스터가 처음지점에서 바라볼 각도
 
 
-    //public bool isEnteredPlayer;
+    public bool isEnteredPlayer;  //플레이어가 소리를 내는걸 확인하기위해 플레이어가 범위안에 있는지 체크
     public bool isWatchingPlayer;   //idle, walk일때 플레이어가 몬스터의 시야각에 있는지 체크하는 bool값
     public bool isChasePlayer;
     public bool isEnteredCoin;
     public bool isAnotherSpot;      //기본 위치가 아닌 다른위치인지 확인
+
+    public bool isHearSound;        //소리를 들었는지 체크
 
     public bool idleCheck = false;  //delayCheck한번만 하기위한 bool값
     public bool isDelayIdle;        //초기 몬스터 위치 외에서 idle 상태일때 5초가 지났는지 체크하는 bool값
@@ -46,7 +49,7 @@ public class Monster : MonoBehaviour
         player = GameObject.Find("Player").transform;
 
         isDelayIdle = false;
-        //isEnteredPlayer = false;
+        isEnteredPlayer = false;        
         isChasePlayer = false;
         isAnotherSpot = false;
 
@@ -112,6 +115,18 @@ public class Monster : MonoBehaviour
             }
         }
 
+        if(dist < 12)
+        {
+            if(player.gameObject.GetComponent<Player>().isMakeSomeNoise == true && !isChasePlayer)
+            {
+                if(currentState.ToString() == "MonsterIdleState")
+                {
+                    SoundPos = player.position;
+                    isHearSound = true;
+                }
+            }
+        }
+
         currentState.Update();
     }
 
@@ -140,10 +155,10 @@ public class Monster : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        //if (other.tag == "Player")
-        //{
-        //    isEnteredPlayer = true;
-        //}
+        if (other.tag == "Player")
+        {
+            isEnteredPlayer = true;
+        }
 
         if (other.tag == "Coin")
         {
@@ -160,11 +175,10 @@ public class Monster : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        //if (other.tag == "Player")
-        //{
-        //    Debug.Log("꺼짐");
-        //    isEnteredPlayer = false;
-        //}
+        if (other.tag == "Player")
+        {
+            isEnteredPlayer = false;
+        }
     }
 
     //========================================

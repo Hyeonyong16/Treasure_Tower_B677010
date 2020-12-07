@@ -35,13 +35,14 @@ public class MonsterIdleState : IState
     public void Exit()
     {
         parent.isDelayIdle = false;
+        
     }
 
     public void Update()
     {
         parent.CheckIdleTime();
 
-        if(!parent.isAnotherSpot)
+        if (!parent.isAnotherSpot)
         {
             parent.gameObject.transform.rotation = Quaternion.Slerp(parent.gameObject.transform.rotation, parent.monsterFirstRot, turnSpeed * Time.deltaTime);
         }
@@ -64,7 +65,13 @@ public class MonsterIdleState : IState
 
         else
         {
-            if(parent.isEnteredCoin)
+            if (parent.isHearSound)
+            {
+                parent.isAnotherSpot = true;
+                parent.ChangeState(new MonsterWalkState());
+            }
+
+            if (parent.isEnteredCoin)
             {
                 parent.isAnotherSpot = true;
                 parent.ChangeState(new MonsterWalkState());

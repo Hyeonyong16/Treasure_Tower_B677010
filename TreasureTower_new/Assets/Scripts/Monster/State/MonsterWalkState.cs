@@ -8,8 +8,12 @@ public class MonsterWalkState : IState
 
     private Animator animator;
 
+    private bool ChaseSound;
+
     public void Enter(Monster parent)
     {
+        ChaseSound = false;
+
         Debug.Log("WalkState");
         this.parent = parent;
         animator = parent.GetComponent<Animator>();
@@ -34,18 +38,32 @@ public class MonsterWalkState : IState
     {
         animator.SetBool("isWalking", false);
         parent.isEnteredCoin = false;
+        parent.isHearSound = false;
     }
 
     public void Update()
     {
+        if(parent.player.gameObject.GetComponent<Player>().isMakeSomeNoise != true || parent.dist > 12)
+        {
+            parent.isHearSound = false;
+        }
+
         if (!parent.isWatchingPlayer)
         {
-            if (parent.isEnteredCoin)
+            if(parent.isHearSound || ChaseSound)
+            {
+                parent.nav.SetDestination(parent.SoundPos);
+                ChaseSound = true;
+                if (Vector3.Distance(parent.transform.position.ignoreY(), parent.SoundPos.ignoreY()) <= 1)
+                {
+                    parent.nav.isStopped = true;
+                    parent.ChangeState(new MonsterIdleState());
+                }
+            }
+
+            else if (parent.isEnteredCoin && !ChaseSound)
             {
                 parent.nav.SetDestination(parent.CoinPos);
-                
-                //if (((parent.transform.position.x <= parent.CoinPos.x + 1.0f) && (parent.transform.position.x >= parent.CoinPos.x - 1.0f))
-                //            && ((parent.transform.position.z <= parent.CoinPos.z + 1.0f) && (parent.transform.position.z >= parent.CoinPos.z - 1.0f)))
                 if (Vector3.Distance(parent.transform.position.ignoreY(), parent.CoinPos.ignoreY()) <= 1)
                 {
                     parent.nav.isStopped = true;
@@ -56,9 +74,6 @@ public class MonsterWalkState : IState
             else
             {
                 parent.nav.SetDestination(parent.MonsterSpawnPos);
-                
-                //if (((parent.transform.position.x <= parent.MonsterSpawnPos.x + 1.0f) && (parent.transform.position.x >= parent.MonsterSpawnPos.x - 1.0f))
-                //            && ((parent.transform.position.z <= parent.MonsterSpawnPos.z + 1.0f) && (parent.transform.position.z >= parent.MonsterSpawnPos.z - 1.0f)))
                 if (Vector3.Distance(parent.transform.position.ignoreY(), parent.MonsterSpawnPos.ignoreY()) <= 1)
                 {
                     parent.nav.isStopped = true;

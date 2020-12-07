@@ -48,6 +48,11 @@ public class PlayerMove : MonoBehaviour
     {
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
+
+        if(player.isMove && !player.isCrouch)
+        {
+            player.isMakeSomeNoise = true;
+        }
         
     }
 
@@ -100,6 +105,7 @@ public class PlayerMove : MonoBehaviour
         else
         {
             player.isMove = false;
+            player.isMakeSomeNoise = false;
             animator.SetBool("isMove", false);
         }
 
@@ -108,18 +114,8 @@ public class PlayerMove : MonoBehaviour
         if (mainCamera.cameraLook == 0)
         {
             movement.Set(h, 0, v);
-        }
-        else if (mainCamera.cameraLook == 1)
-        {
-            movement.Set(v, 0, -h);
-        }
-        else if (mainCamera.cameraLook == 2)
-        {
-            movement.Set(-h, 0, -v);
-        }
-        else
-        {
-            movement.Set(-v, 0, h);
+            //====================
+            movement.Normalize();
         }
 
         if (player.isInteraction && player.isMove)
@@ -130,10 +126,18 @@ public class PlayerMove : MonoBehaviour
         else if (!player.isInteraction && player.isMove)
         {
             if (!player.isCrouch)
-                movement = movement.normalized * speed * Time.deltaTime;
+            {
+                movement = Camera.main.transform.TransformDirection(movement);
+                movement.y = 0;
+                movement = movement * speed * Time.deltaTime;
+            }
 
             else
-                movement = movement.normalized * crouchSpeed * Time.deltaTime;
+            {
+                movement = Camera.main.transform.TransformDirection(movement);
+                movement.y = 0;
+                movement = movement * crouchSpeed * Time.deltaTime;
+            }
 
             characterRigidbody.MovePosition(transform.position + movement);
         }

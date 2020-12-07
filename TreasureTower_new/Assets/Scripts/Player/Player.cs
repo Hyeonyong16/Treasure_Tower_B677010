@@ -14,8 +14,9 @@ public class Player : MonoBehaviour
     public bool isCrouch = false;
     public bool isThrow = false;
     public bool isInteraction = false;
+    public bool isMakeSomeNoise = false;    //범위 안에서 뛸시 소리나는거 확인하는 변수
 
-    public bool moveFreezeCheck = false; //잠깐 플레이어의 움직임을 막을 변수
+    public bool moveFreezeCheck = false;    //잠깐 플레이어의 움직임을 막을 변수
 
     // Start is called before the first frame update
     void Start()
