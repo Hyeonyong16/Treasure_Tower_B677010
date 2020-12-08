@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public int MaxHP = 4;
-    public int HP = 4;
+    public int MaxHP = 1;
+    public int HP = 1;
 
     public int MaxCoinNum = 3;
     public int coinNum = 3;
@@ -18,17 +18,22 @@ public class Player : MonoBehaviour
 
     public bool moveFreezeCheck = false;    //잠깐 플레이어의 움직임을 막을 변수
 
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
         HP = MaxHP;
         coinNum = MaxCoinNum;
+
+        animator = GetComponent<Animator>();
+        animator.SetFloat("HP", HP);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        animator.SetFloat("HP", HP);
     }
 
     public void GetDamaged(int damage)

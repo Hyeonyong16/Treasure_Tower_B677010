@@ -21,7 +21,7 @@ public class MonsterWeapon : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            if (monster.GetCurrentState().ToString() == "MonsterAttackState" && !isPlayerEntered)
+            if (monster.GetCurrentState().ToString() == "MonsterAttackState" && !isPlayerEntered && monster.DamageTime)
             {
                 Debug.Log("플레이어 enter");
                 other.GetComponent<Player>().GetDamaged(1);

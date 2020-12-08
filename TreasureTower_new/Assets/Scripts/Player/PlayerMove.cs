@@ -58,17 +58,20 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!player.isThrow && !player.moveFreezeCheck)
+        if (player.HP > 0)
         {
-            Move();
-            if(!player.isInteraction)
-                Turn();
-        }
+            if (!player.isThrow && !player.moveFreezeCheck)
+            {
+                Move();
+                if (!player.isInteraction)
+                    Turn();
+            }
 
-        if(Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            player.isCrouch = !player.isCrouch;
-            animator.SetBool("isCrouch", player.isCrouch);
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                player.isCrouch = !player.isCrouch;
+                animator.SetBool("isCrouch", player.isCrouch);
+            }
         }
         
     }
@@ -129,17 +132,18 @@ public class PlayerMove : MonoBehaviour
             {
                 movement = Camera.main.transform.TransformDirection(movement);
                 movement.y = 0;
-                movement = movement * speed * Time.deltaTime;
+                movement = movement * speed /** Time.deltaTime*/;
             }
 
             else
             {
                 movement = Camera.main.transform.TransformDirection(movement);
                 movement.y = 0;
-                movement = movement * crouchSpeed * Time.deltaTime;
+                movement = movement * crouchSpeed /** Time.deltaTime*/;
             }
 
-            characterRigidbody.MovePosition(transform.position + movement);
+            characterRigidbody.velocity = movement;
+            //characterRigidbody.MovePosition(transform.position + movement);   //position 이동은 Raycast 사용해서 갈수 있는 position인지 체크 필수!
         }
     }
 

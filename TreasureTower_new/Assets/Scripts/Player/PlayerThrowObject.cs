@@ -23,20 +23,23 @@ public class PlayerThrowObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (player.HP > 0)
         {
-            if (!player.isThrow && !player.isInteraction && player.coinNum > 0)
+            if (Input.GetKeyDown(KeyCode.G))
             {
-                player.isThrow = true;
-                player.coinNum--;
+                if (!player.isThrow && !player.isInteraction && player.coinNum > 0)
+                {
+                    player.isThrow = true;
+                    player.coinNum--;
+                    animator.SetBool("isThrow", player.isThrow);
+                }
+            }
+
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Throw") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            {
+                player.isThrow = false;
                 animator.SetBool("isThrow", player.isThrow);
             }
-        }
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Throw") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-        {
-            player.isThrow = false;
-            animator.SetBool("isThrow", player.isThrow);
         }
     }
 

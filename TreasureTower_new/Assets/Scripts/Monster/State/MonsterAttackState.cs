@@ -36,6 +36,13 @@ public class MonsterAttackState : IState
 
         parent.transform.rotation = Quaternion.Lerp(parent.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 3.0f);
 
+        if(parent.player.GetComponent<Player>().HP <= 0)
+        {
+            animator.SetBool("ChasePlayer", false);
+            parent.lastPlayerPos = parent.transform.position;
+            parent.ChangeState(new MonsterIdleState());
+        }
+
         if (parent.dist > 2.5f)
         {
             if (parent.isChasePlayer)

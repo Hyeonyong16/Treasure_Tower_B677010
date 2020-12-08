@@ -43,49 +43,65 @@ public class MonsterWalkState : IState
 
     public void Update()
     {
-        if(parent.player.gameObject.GetComponent<Player>().isMakeSomeNoise != true || parent.dist > 12)
+        if (parent.player.gameObject.GetComponent<Player>().isMakeSomeNoise != true || parent.dist > 12)
         {
             parent.isHearSound = false;
         }
 
-        if (!parent.isWatchingPlayer)
+        if (parent.player.GetComponent<Player>().HP > 0)
         {
-            if(parent.isHearSound || ChaseSound)
+            if (!parent.isWatchingPlayer)
             {
-                parent.nav.SetDestination(parent.SoundPos);
-                ChaseSound = true;
-                if (Vector3.Distance(parent.transform.position.ignoreY(), parent.SoundPos.ignoreY()) <= 1)
+                if (parent.isHearSound || ChaseSound)
                 {
-                    parent.nav.isStopped = true;
-                    parent.ChangeState(new MonsterIdleState());
-                }
-            }
+                    parent.nav.SetDestination(parent.SoundPos);
+                    ChaseSound = true;
+                    if (Vector3.Distance(parent.transform.position.ignoreY(), parent.SoundPos.ignoreY()) <= 1)
+                    {
+                        parent.nav.isStopped = true;
+                        parent.ChangeState(new MonsterIdleState());
+                    }
 
-            else if (parent.isEnteredCoin && !ChaseSound)
-            {
-                parent.nav.SetDestination(parent.CoinPos);
-                if (Vector3.Distance(parent.transform.position.ignoreY(), parent.CoinPos.ignoreY()) <= 1)
+                }
+
+                else if (parent.isEnteredCoin && !ChaseSound)
                 {
-                    parent.nav.isStopped = true;
-                    parent.ChangeState(new MonsterIdleState());
+                    parent.nav.SetDestination(parent.CoinPos);
+                    if (Vector3.Distance(parent.transform.position.ignoreY(), parent.CoinPos.ignoreY()) <= 1)
+                    {
+                        parent.nav.isStopped = true;
+                        parent.ChangeState(new MonsterIdleState());
+                    }
+                }
+
+
+                else
+                {
+                    parent.nav.SetDestination(parent.MonsterSpawnPos);
+                    if (Vector3.Distance(parent.transform.position.ignoreY(), parent.MonsterSpawnPos.ignoreY()) <= 1)
+                    {
+                        parent.nav.isStopped = true;
+                        parent.isAnotherSpot = false;
+                        parent.ChangeState(new MonsterIdleState());
+                    }
                 }
             }
 
             else
             {
-                parent.nav.SetDestination(parent.MonsterSpawnPos);
-                if (Vector3.Distance(parent.transform.position.ignoreY(), parent.MonsterSpawnPos.ignoreY()) <= 1)
-                {
-                    parent.nav.isStopped = true;
-                    parent.isAnotherSpot = false;
-                    parent.ChangeState(new MonsterIdleState());
-                }
+                parent.ChangeState(new MonsterRunState());
             }
         }
 
         else
         {
-            parent.ChangeState(new MonsterRunState());
+            parent.nav.SetDestination(parent.MonsterSpawnPos);
+            if (Vector3.Distance(parent.transform.position.ignoreY(), parent.MonsterSpawnPos.ignoreY()) <= 1)
+            {
+                parent.nav.isStopped = true;
+                parent.isAnotherSpot = false;
+                parent.ChangeState(new MonsterIdleState());
+            }
         }
     }
 }

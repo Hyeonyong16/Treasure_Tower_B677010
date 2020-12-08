@@ -20,21 +20,25 @@ public class Monster : MonoBehaviour
     public Transform monsterSpawn;
     public Vector3 MonsterSpawnPos;
     public Quaternion monsterFirstRot;     //몬스터가 처음지점에서 바라볼 각도
-
-
+    
     public bool isEnteredPlayer;  //플레이어가 소리를 내는걸 확인하기위해 플레이어가 범위안에 있는지 체크
     public bool isWatchingPlayer;   //idle, walk일때 플레이어가 몬스터의 시야각에 있는지 체크하는 bool값
     public bool isChasePlayer;
     public bool isEnteredCoin;
     public bool isAnotherSpot;      //기본 위치가 아닌 다른위치인지 확인
-
     public bool isHearSound;        //소리를 들었는지 체크
-
-    public bool idleCheck = false;  //delayCheck한번만 하기위한 bool값
-    public bool isDelayIdle;        //초기 몬스터 위치 외에서 idle 상태일때 5초가 지났는지 체크하는 bool값
-
+    
     public float AttackRange;
     public float dist;          //플레이어와 몬스터 거리
+
+    //[HideInInspector]
+    public bool DamageTime = false;
+
+    [HideInInspector]
+    public bool idleCheck = false;  //delayCheck한번만 하기위한 bool값
+
+    [HideInInspector]
+    public bool isDelayIdle;        //초기 몬스터 위치 외에서 idle 상태일때 5초가 지났는지 체크하는 bool값
 
     private Animator animator;
 
@@ -122,7 +126,13 @@ public class Monster : MonoBehaviour
                 if(currentState.ToString() == "MonsterIdleState")
                 {
                     SoundPos = player.position;
-                    isHearSound = true;
+
+                    NavMeshPath navMeshPath = new NavMeshPath();
+                    nav.CalculatePath(SoundPos, navMeshPath);
+                    if (navMeshPath.status == NavMeshPathStatus.PathComplete)
+                    {
+                        isHearSound = true;
+                    }
                 }
             }
         }
@@ -163,12 +173,17 @@ public class Monster : MonoBehaviour
         if (other.tag == "Coin")
         {
             Coin coin = other.GetComponent<Coin>();
-
             if (coin.isGround && !coin.isChecked)
             {
                 coin.isChecked = true;
-                isEnteredCoin = true;
                 CoinPos = other.gameObject.transform.position;
+
+                NavMeshPath navMeshPath = new NavMeshPath();
+                nav.CalculatePath(CoinPos, navMeshPath);
+                if (navMeshPath.status == NavMeshPathStatus.PathComplete)
+                {
+                    isEnteredCoin = true;
+                }
             }
         }
     }
@@ -185,6 +200,16 @@ public class Monster : MonoBehaviour
     public void SetisPlayerEnteredFalse()
     {
         weapon.GetComponent<MonsterWeapon>().SetisPlayerEnteredFalse();
+    }
+
+    public void SetDamageTimeTrue()
+    {
+        DamageTime = true;
+    }
+
+    public void SetDamageTimeFalse()
+    {
+        DamageTime = false;
     }
 
     public void CheckIdleTime()

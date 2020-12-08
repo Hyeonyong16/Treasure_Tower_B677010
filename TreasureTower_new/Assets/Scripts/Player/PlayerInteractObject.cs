@@ -10,6 +10,7 @@ public class PlayerInteractObject : MonoBehaviour
     public GameObject nearObject;
 
     public GameObject interactionUI;
+    public GameObject interactionUI_CoinFull;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,8 @@ public class PlayerInteractObject : MonoBehaviour
 
         interactionUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
             Find("BackGround_InteractionCheck").gameObject;
+        interactionUI_CoinFull = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
+            Find("BackGround_InteractionCheck_CoinFull").gameObject;
 
         nearObject = null;
     }
@@ -28,41 +31,54 @@ public class PlayerInteractObject : MonoBehaviour
     {
         if(nearObject != null && !player.isInteraction)
         {
-            interactionUI.SetActive(true);
+            if(nearObject.tag == "CoinsObject" && player.coinNum == player.MaxCoinNum)
+            {
+                interactionUI.SetActive(false);
+                interactionUI_CoinFull.SetActive(true);
+            }
+            else
+            {
+                interactionUI.SetActive(true);
+                interactionUI_CoinFull.SetActive(false);
+            }
         }
 
         else
         {
             interactionUI.SetActive(false);
+            interactionUI_CoinFull.SetActive(false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (player.HP > 0)
         {
-            if (!player.isThrow && nearObject != null && !player.isInteraction)
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                if(nearObject.name == "Coin" && player.coinNum == player.MaxCoinNum)
+                if (!player.isThrow && nearObject != null && !player.isInteraction)
                 {
+                    if (nearObject.name == "Coin" && player.coinNum == player.MaxCoinNum)
+                    {
 
+                    }
+
+                    else
+                    {
+                        player.moveFreezeCheck = true;
+
+                        player.isMove = false;
+                        player.isInteraction = true;
+
+                        animator.SetBool("isInteraction", true);
+                        //animator.SetBool("isMove", false);
+
+                        nearObject.GetComponent<ObjectInteraction>().progressBarUI.transform.parent.gameObject.SetActive(true);
+                    }
+
+
+                    //else
+                    //{
+                    //    animator.SetBool("isInteraction", false);
+                    //}
                 }
-
-                else
-                {
-                    player.moveFreezeCheck = true;
-
-                    player.isMove = false;
-                    player.isInteraction = true;
-
-                    animator.SetBool("isInteraction", true);
-                    //animator.SetBool("isMove", false);
-
-                    nearObject.GetComponent<ObjectInteraction>().progressBarUI.transform.parent.gameObject.SetActive(true);
-                }
-
-
-                //else
-                //{
-                //    animator.SetBool("isInteraction", false);
-                //}
             }
         }
     }
@@ -75,7 +91,7 @@ public class PlayerInteractObject : MonoBehaviour
 
         if (nearObject.GetComponent<ObjectInteraction>().maxProgress == nearObject.GetComponent<ObjectInteraction>().progress)
         {
-            if(nearObject.name == "Coin")
+            if(nearObject.tag == "CoinsObject")
             {
                 player.coinNum++;
             }

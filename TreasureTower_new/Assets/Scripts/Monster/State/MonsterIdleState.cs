@@ -51,30 +51,32 @@ public class MonsterIdleState : IState
         {
             if (!(Vector3.Distance(parent.transform.position.ignoreY(), parent.MonsterSpawnPos.ignoreY()) <= Mathf.Sqrt(1.0f)))
             {
-                Debug.Log("문제임;?");
                 parent.isAnotherSpot = false;
                 parent.ChangeState(new MonsterWalkState());
             }
         }
 
-        if(parent.isWatchingPlayer)
+        if (parent.player.GetComponent<Player>().HP > 0)
         {
-            parent.isAnotherSpot = true;
-            parent.ChangeState(new MonsterRunState());
-        }
-
-        else
-        {
-            if (parent.isHearSound)
+            if (parent.isWatchingPlayer)
             {
                 parent.isAnotherSpot = true;
-                parent.ChangeState(new MonsterWalkState());
+                parent.ChangeState(new MonsterRunState());
             }
 
-            if (parent.isEnteredCoin)
+            else
             {
-                parent.isAnotherSpot = true;
-                parent.ChangeState(new MonsterWalkState());
+                if (parent.isHearSound)
+                {
+                    parent.isAnotherSpot = true;
+                    parent.ChangeState(new MonsterWalkState());
+                }
+
+                if (parent.isEnteredCoin)
+                {
+                    parent.isAnotherSpot = true;
+                    parent.ChangeState(new MonsterWalkState());
+                }
             }
         }
     }
