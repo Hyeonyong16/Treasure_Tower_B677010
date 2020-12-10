@@ -20,8 +20,17 @@ public class ObjectInteraction : MonoBehaviour
     {
         isPlayerEnter = false;
         progress = 0;
-        progressBarUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
+        if (gameObject.name == "GoldCoins")
+        {
+            progressBarUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
               Find("BackGround_Coin_Progress").transform.Find("Progress").GetComponent<ProgressBar>();
+        }
+
+        else if (gameObject.name == "Door")
+        {
+            progressBarUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
+              Find("BackGround_Door_Progress").transform.Find("Progress").GetComponent<ProgressBar>();
+        }
     }
 
     // Update is called once per frame
