@@ -31,6 +31,11 @@ public class ObjectInteraction : MonoBehaviour
             progressBarUI = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
               Find("BackGround_Door_Progress").transform.Find("Progress").GetComponent<ProgressBar>();
         }
+
+        else if (gameObject.name == "Book")
+        {
+            progressBarUI = null;
+        }
     }
 
     // Update is called once per frame

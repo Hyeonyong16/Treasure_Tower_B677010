@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DrawOutline : MonoBehaviour
 {
+    public GameObject changeObject;
     public Material outlineMaterial;
     public Material baseMaterial;
 
@@ -12,7 +13,7 @@ public class DrawOutline : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();    
+        meshRenderer = changeObject.GetComponent<MeshRenderer>();    
     }
 
     // Update is called once per frame

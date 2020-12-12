@@ -135,6 +135,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.4080145, y: 2.2950897, z: 0.29553434}
   m_Center: {x: 0, y: 1.1481464, z: 0.028115734}
+--- !u!114 &1732293886335658593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8447950703871376647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b061ebead4e89f140b0a6425a06c08df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeObject: {fileID: 8447950703871376647}
+  outlineMaterial: {fileID: 2100000, guid: 157083508a022894fb7efd9f11775a29, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 2e701f9d6b8aa304c93f2af59c1ee5d9, type: 2}
 --- !u!114 &8140937005139394277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,6 +164,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlayerEnter: 0
   player: {fileID: 0}
+  interactedObject: {fileID: 0}
+  progressBarUI: {fileID: 0}
   progress: 0
   maxProgress: 4
 --- !u!1001 &8140937004907244229

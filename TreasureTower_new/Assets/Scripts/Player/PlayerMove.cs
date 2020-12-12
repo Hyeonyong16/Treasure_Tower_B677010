@@ -49,9 +49,22 @@ public class PlayerMove : MonoBehaviour
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
 
-        if(player.isMove && !player.isCrouch)
+        if (player.HP > 0)
         {
-            player.isMakeSomeNoise = true;
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                player.isCrouch = !player.isCrouch;
+                animator.SetBool("isCrouch", player.isCrouch);
+            }
+
+            if (player.isMove && !player.isCrouch)
+            {
+                player.isMakeSomeNoise = true;
+            }
+            if(player.isCrouch)
+            {
+                player.isMakeSomeNoise = false;
+            }
         }
         
     }
@@ -65,12 +78,6 @@ public class PlayerMove : MonoBehaviour
                 Move();
                 if (!player.isInteraction)
                     Turn();
-            }
-
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                player.isCrouch = !player.isCrouch;
-                animator.SetBool("isCrouch", player.isCrouch);
             }
         }
         

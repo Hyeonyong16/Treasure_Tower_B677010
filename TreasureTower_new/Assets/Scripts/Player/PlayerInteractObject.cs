@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerInteractObject : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerInteractObject : MonoBehaviour
 
     public GameObject interactionUI;
     public GameObject interactionUI_CoinFull;
+    public GameObject interactionUI_Book;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,8 @@ public class PlayerInteractObject : MonoBehaviour
             Find("BackGround_InteractionCheck").gameObject;
         interactionUI_CoinFull = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
             Find("BackGround_InteractionCheck_CoinFull").gameObject;
+        interactionUI_Book = GameObject.Find("Canvas").transform.Find("InteractiveUI").transform.
+            Find("BackGround_InteractionCheck_Book").gameObject;
 
         nearObject = null;
     }
@@ -35,11 +39,41 @@ public class PlayerInteractObject : MonoBehaviour
             {
                 interactionUI.SetActive(false);
                 interactionUI_CoinFull.SetActive(true);
+                interactionUI_Book.SetActive(false);
             }
+
+            else if (nearObject.name == "Book")
+            {
+                interactionUI.SetActive(false);
+                interactionUI_CoinFull.SetActive(false);
+                interactionUI_Book.SetActive(true);
+
+                switch (nearObject.GetComponent<BookScriptHandle>().objectRoom.isEnterPlayer)
+                {
+                    case true:
+                        {
+                            TextMeshProUGUI uiText = interactionUI_Book.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                            uiText.text = "닫기";
+                            break;
+                        }
+
+                    case false:
+                        {
+                            TextMeshProUGUI uiText = interactionUI_Book.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                            uiText.text = "열기";
+                            break;
+                        }
+
+                    default:
+                        break;
+                }
+            }
+
             else
             {
                 interactionUI.SetActive(true);
                 interactionUI_CoinFull.SetActive(false);
+                interactionUI_Book.SetActive(false);
             }
         }
 
@@ -47,6 +81,7 @@ public class PlayerInteractObject : MonoBehaviour
         {
             interactionUI.SetActive(false);
             interactionUI_CoinFull.SetActive(false);
+            interactionUI_Book.SetActive(false);
         }
 
         if (player.HP > 0)
@@ -55,9 +90,30 @@ public class PlayerInteractObject : MonoBehaviour
             {
                 if (!player.isThrow && nearObject != null && !player.isInteraction)
                 {
-                    if (nearObject.name == "Coin" && player.coinNum == player.MaxCoinNum)
+                    if (nearObject.tag == "CoinsObject" && player.coinNum == player.MaxCoinNum)
                     {
 
+                    }
+
+                    else if (nearObject.name == "Book")
+                    {
+                        switch(nearObject.GetComponent<BookScriptHandle>().objectRoom.isEnterPlayer)
+                        {
+                            case true:
+                                {
+                                    nearObject.GetComponent<BookScriptHandle>().objectRoom.isEnterPlayer = false;
+                                    break;
+                                }
+
+                            case false:
+                                {
+                                    nearObject.GetComponent<BookScriptHandle>().objectRoom.isEnterPlayer = true;
+                                    break;
+                                }
+
+                            default:
+                                break;
+                        }
                     }
 
                     else
@@ -96,7 +152,8 @@ public class PlayerInteractObject : MonoBehaviour
                 player.coinNum++;
             }
 
-            Destroy(nearObject);
+            if(nearObject.tag != "NotDestroyInteractionObject")
+                Destroy(nearObject);
         }
     }
 

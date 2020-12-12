@@ -13,10 +13,12 @@ GameObject:
   - component: {fileID: 7042963222038409682}
   - component: {fileID: 7056849158140065091}
   - component: {fileID: 7056849158140065090}
+  - component: {fileID: 8519081501802397234}
   - component: {fileID: 7056849158140065100}
+  - component: {fileID: 4905253391813469607}
   m_Layer: 0
   m_Name: GoldCoins
-  m_TagString: Untagged
+  m_TagString: CoinsObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91,7 +93,7 @@ SphereCollider:
   m_GameObject: {fileID: 7054915914107182442}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.15
   m_Center: {x: 0, y: 0, z: 0}
@@ -108,6 +110,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0.05, z: 0}
+--- !u!65 &8519081501802397234
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054915914107182442}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.30123743, y: 0.29964566, z: 0.30262247}
+  m_Center: {x: 0.00040256977, y: -0.00040261747, z: 0}
 --- !u!114 &7056849158140065100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,3 +141,18 @@ MonoBehaviour:
   progressBarUI: {fileID: 0}
   progress: 0
   maxProgress: 2
+--- !u!114 &4905253391813469607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054915914107182442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b061ebead4e89f140b0a6425a06c08df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeObject: {fileID: 7054915914107182442}
+  outlineMaterial: {fileID: 2100000, guid: dc7738a8898ee45489cbc1ea02df257f, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 9c86c760eff2cfb42a5edea677f34ae4, type: 2}

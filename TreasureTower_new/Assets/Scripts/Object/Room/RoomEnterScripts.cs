@@ -7,7 +7,7 @@ using UnityEngine;
 public class RoomEnterScripts : MonoBehaviour
 {
     public Player player;
-    private bool isEnterPlayer;     //플레이어가 방에 들어왔는지 체크하는 변수
+    public bool isEnterPlayer;     //플레이어가 방에 들어왔는지 체크하는 변수
 
     public bool roomScriptCheck;    //방에 들어올때 스크립트가 뜰지 말지 결정하는 스크립트
     public GameObject scriptBaseObject; //스크립트를 띄울 오브젝트

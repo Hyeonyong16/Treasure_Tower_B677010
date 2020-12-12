@@ -9,6 +9,7 @@ TagManager:
   - Object
   - CoinsObject
   - Room
+  - NotDestroyInteractionObject
   layers:
   - Default
   - TransparentFX

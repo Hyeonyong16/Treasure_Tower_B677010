@@ -30,6 +30,7 @@ public class Monster : MonoBehaviour
     
     public float AttackRange;
     public float dist;          //플레이어와 몬스터 거리
+    public float hearDistance;  //몬스터가 소리를 들을 거리
 
     //[HideInInspector]
     public bool DamageTime = false;
@@ -119,11 +120,11 @@ public class Monster : MonoBehaviour
             }
         }
 
-        if(dist < 12)
+        if(dist < hearDistance)
         {
             if(player.gameObject.GetComponent<Player>().isMakeSomeNoise == true && !isChasePlayer)
             {
-                if(currentState.ToString() == "MonsterIdleState")
+                if(currentState.ToString() == "MonsterIdleState" || currentState.ToString() == "MonsterWalkState")
                 {
                     SoundPos = player.position;
 
@@ -182,7 +183,8 @@ public class Monster : MonoBehaviour
                 nav.CalculatePath(CoinPos, navMeshPath);
                 if (navMeshPath.status == NavMeshPathStatus.PathComplete)
                 {
-                    isEnteredCoin = true;
+                    if (Vector3.Distance(CoinPos.ignoreY(), transform.position.ignoreY()) < hearDistance)
+                        isEnteredCoin = true;
                 }
             }
         }

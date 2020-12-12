@@ -20,18 +20,6 @@ public class MonsterWalkState : IState
 
         parent.nav.isStopped = false;
         animator.SetBool("isWalking", true);
-
-        if (!parent.isAnotherSpot)
-        {
-            parent.fieldOfView.viewAngle = 65;
-            parent.fieldOfView.viewRadius = 10;
-        }
-
-        else
-        {
-            parent.fieldOfView.viewAngle = 360;
-            parent.fieldOfView.viewRadius = 12;
-        }
     }
 
     public void Exit()
@@ -43,7 +31,19 @@ public class MonsterWalkState : IState
 
     public void Update()
     {
-        if (parent.player.gameObject.GetComponent<Player>().isMakeSomeNoise != true || parent.dist > 12)
+        if (!parent.isAnotherSpot)
+        {
+            parent.fieldOfView.viewAngle = 65;
+            parent.fieldOfView.viewRadius = 10;
+        }
+
+        else
+        {
+            parent.fieldOfView.viewAngle = 360;
+            parent.fieldOfView.viewRadius = 12;
+        }
+
+        if (parent.player.gameObject.GetComponent<Player>().isMakeSomeNoise != true || parent.dist > parent.hearDistance)
         {
             parent.isHearSound = false;
         }
@@ -54,6 +54,7 @@ public class MonsterWalkState : IState
             {
                 if (parent.isHearSound || ChaseSound)
                 {
+                    parent.isAnotherSpot = true;
                     parent.nav.SetDestination(parent.SoundPos);
                     ChaseSound = true;
                     if (Vector3.Distance(parent.transform.position.ignoreY(), parent.SoundPos.ignoreY()) <= 1)
@@ -66,6 +67,7 @@ public class MonsterWalkState : IState
 
                 else if (parent.isEnteredCoin && !ChaseSound)
                 {
+                    parent.isAnotherSpot = true;
                     parent.nav.SetDestination(parent.CoinPos);
                     if (Vector3.Distance(parent.transform.position.ignoreY(), parent.CoinPos.ignoreY()) <= 1)
                     {
